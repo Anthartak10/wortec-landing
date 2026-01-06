@@ -183,7 +183,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="bg-gradient-to-r from-[oklch(0.72_0.15_195)] via-[oklch(0.70_0.16_240)] to-[oklch(0.65_0.18_285)]">
               <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                Consulta Gratis <ArrowRight className="w-5 h-5" />
+                Agendar Consulta <ArrowRight className="w-5 h-5" />
               </a>
             </Button>
             <Button asChild size="lg" variant="outline">
