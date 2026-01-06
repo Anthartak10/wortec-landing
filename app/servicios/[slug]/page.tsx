@@ -13,11 +13,7 @@ export default async function ServiceBrochurePage({ params }: Props) {
   const { slug } = await params
 
   const service = services.find((s) => s.slug === slug)
-  if (!service) {
-    notFound()
-  }
-
-  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_URL || "#"
+  if (!service) notFound()
 
   return (
     <main className="min-h-screen py-16">
@@ -45,15 +41,11 @@ export default async function ServiceBrochurePage({ params }: Props) {
               <a href="#solicitud">Ir al formulario</a>
             </Button>
 
-            <Button asChild>
-              <a href={whatsapp} target="_blank" rel="noopener noreferrer">
-                WhatsApp
-              </a>
-            </Button>
+            {/* WhatsApp eliminado hasta tener número real */}
           </div>
         </div>
 
-        <ServiceBrochureSection title="Qué incluye este servicio" bullets={service.brochure.bullets} />
+        <ServiceBrochureSection title="Qué incluye este servicio" bullets={[...service.brochure.bullets]} />
 
         <ServiceRequestForm serviceTitle={service.title} serviceSlug={service.slug} />
       </div>
