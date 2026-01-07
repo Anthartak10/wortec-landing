@@ -9,8 +9,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Send, CheckCircle2, AlertTriangle } from "lucide-react"
 
-const FORM_ENDPOINT = "https://formspree.io/f/xykzqrdb"
-
 type Props = {
   serviceTitle: string
   serviceSlug: string
@@ -32,30 +30,27 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
     setErrorMsg("")
 
     try {
-      const payload = new FormData()
-      payload.append("name", formData.name)
-      payload.append("email", formData.email)
-      payload.append("phone", formData.phone)
-      payload.append("message", formData.message)
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        service: serviceTitle,
+        serviceSlug,
+        page: typeof window !== "undefined" ? window.location.href : "",
+        source: "Service Page Wortec",
+      }
 
-      payload.append("service", serviceTitle)
-      payload.append("serviceSlug", serviceSlug)
-      payload.append("page", window.location.href)
-      payload.append("source", "Service Page Wortec")
-
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch("/api/lead", {
         method: "POST",
-        body: payload,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
       })
 
       const data = await res.json().catch(() => null)
 
       if (!res.ok) {
-        const msg =
-          data?.error ||
-          (Array.isArray(data?.errors) && data.errors[0]?.message) ||
-          "Formspree rechazó la solicitud. Verifica el hashid y el dominio permitido."
+        const msg = data?.error || (Array.isArray(data?.errors) && data.errors[0]?.message) || "No se pudo enviar."
         throw new Error(msg)
       }
 
@@ -163,5 +158,6 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
     </section>
   )
 }
+
 
 

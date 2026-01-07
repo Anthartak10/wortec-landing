@@ -9,8 +9,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin, Send, CheckCircle2, AlertTriangle } from "lucide-react"
 
-const FORM_ENDPOINT = "https://formspree.io/f/xykzqrdb"
-
 export function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
@@ -29,28 +27,26 @@ export function ContactSection() {
     setErrorMsg("")
 
     try {
-      const payload = new FormData()
-      payload.append("name", formData.name)
-      payload.append("email", formData.email)
-      payload.append("phone", formData.phone)
-      payload.append("service", formData.service)
-      payload.append("message", formData.message)
-      payload.append("page", window.location.href)
-      payload.append("source", "Landing Wortec")
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        message: formData.message,
+        page: typeof window !== "undefined" ? window.location.href : "",
+        source: "Landing Wortec",
+      }
 
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch("/api/lead", {
         method: "POST",
-        body: payload,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
       })
 
       const data = await res.json().catch(() => null)
 
       if (!res.ok) {
-        const msg =
-          data?.error ||
-          (Array.isArray(data?.errors) && data.errors[0]?.message) ||
-          "No se pudo enviar. Revisa la configuración de dominio en Formspree."
+        const msg = data?.error || (Array.isArray(data?.errors) && data.errors[0]?.message) || "No se pudo enviar."
         throw new Error(msg)
       }
 
@@ -77,7 +73,6 @@ export function ContactSection() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Form */}
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
             <CardHeader>
               <CardTitle className="text-2xl">Solicitar Cotización</CardTitle>
@@ -190,7 +185,6 @@ export function ContactSection() {
             </CardContent>
           </Card>
 
-          {/* Info */}
           <div className="space-y-6">
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
               <CardContent className="p-6 flex items-start gap-4">
@@ -227,8 +221,6 @@ export function ContactSection() {
                 </div>
               </CardContent>
             </Card>
-
-            {/* WhatsApp eliminado hasta tener número real */}
           </div>
         </div>
       </div>
