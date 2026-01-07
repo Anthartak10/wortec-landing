@@ -21,10 +21,12 @@ export function ContactSection() {
   })
 
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [errorMsg, setErrorMsg] = useState("")
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus("sending")
+    setErrorMsg("")
 
     try {
       const payload = new FormData()
@@ -33,9 +35,7 @@ export function ContactSection() {
       payload.append("phone", formData.phone)
       payload.append("service", formData.service)
       payload.append("message", formData.message)
-
-      // extras útiles
-      payload.append("page", typeof window !== "undefined" ? window.location.href : "")
+      payload.append("page", window.location.href)
       payload.append("source", "Landing Wortec")
 
       const res = await fetch(FORM_ENDPOINT, {
@@ -44,12 +44,21 @@ export function ContactSection() {
         headers: { Accept: "application/json" },
       })
 
-      if (!res.ok) throw new Error("Formspree submit failed")
+      const data = await res.json().catch(() => null)
+
+      if (!res.ok) {
+        const msg =
+          data?.error ||
+          (Array.isArray(data?.errors) && data.errors[0]?.message) ||
+          "No se pudo enviar. Revisa la configuración de dominio en Formspree."
+        throw new Error(msg)
+      }
 
       setStatus("success")
       setFormData({ name: "", email: "", phone: "", service: "", message: "" })
-    } catch {
+    } catch (err: any) {
       setStatus("error")
+      setErrorMsg(err?.message || "No se pudo enviar el formulario.")
     }
   }
 
@@ -68,7 +77,7 @@ export function ContactSection() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Form */}
+          {/* Form */}
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
             <CardHeader>
               <CardTitle className="text-2xl">Solicitar Cotización</CardTitle>
@@ -92,7 +101,7 @@ export function ContactSection() {
                     <AlertTriangle className="w-5 h-5 text-destructive mt-0.5" />
                     <div>
                       <p className="font-semibold">No pudimos enviar el mensaje.</p>
-                      <p className="text-sm text-muted-foreground">Intenta de nuevo en unos segundos.</p>
+                      <p className="text-sm text-muted-foreground">{errorMsg}</p>
                     </div>
                   </div>
                 )}
@@ -177,15 +186,11 @@ export function ContactSection() {
                   <Send className="w-4 h-4 mr-2" />
                   {status === "sending" ? "Enviando..." : "Enviar Solicitud"}
                 </Button>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  Al enviar, aceptas ser contactado por Wortec para dar seguimiento a tu solicitud.
-                </p>
               </form>
             </CardContent>
           </Card>
 
-          {/* Contact Info */}
+          {/* Info */}
           <div className="space-y-6">
             <Card className="bg-card/50 backdrop-blur-sm border-border/50">
               <CardContent className="p-6 flex items-start gap-4">
@@ -195,7 +200,6 @@ export function ContactSection() {
                 <div>
                   <h3 className="font-semibold mb-1">Teléfono</h3>
                   <p className="text-muted-foreground">Pronto</p>
-                  <p className="text-sm text-muted-foreground mt-1">Lun - Vie: 9:00 AM - 6:00 PM</p>
                 </div>
               </CardContent>
             </Card>
@@ -208,7 +212,6 @@ export function ContactSection() {
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
                   <p className="text-muted-foreground">info@wortecsolutionscr.com</p>
-                  <p className="text-sm text-muted-foreground mt-1">Respuesta en 24 horas</p>
                 </div>
               </CardContent>
             </Card>
@@ -221,15 +224,15 @@ export function ContactSection() {
                 <div>
                   <h3 className="font-semibold mb-1">Ubicación</h3>
                   <p className="text-muted-foreground">Costa Rica</p>
-                  <p className="text-sm text-muted-foreground mt-1">Atendemos presencial y remoto</p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Nota: WhatsApp eliminado a propósito hasta tener número real */}
+            {/* WhatsApp eliminado hasta tener número real */}
           </div>
         </div>
       </div>
     </section>
   )
 }
+

@@ -46,19 +46,16 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         body: payload,
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { Accept: "application/json" },
       })
 
-      // Intentar leer json para errores legibles
       const data = await res.json().catch(() => null)
 
       if (!res.ok) {
         const msg =
           data?.error ||
           (Array.isArray(data?.errors) && data.errors[0]?.message) ||
-          "No se pudo enviar. Verifica el dominio permitido en Formspree y vuelve a intentar."
+          "Formspree rechazó la solicitud. Verifica el hashid y el dominio permitido."
         throw new Error(msg)
       }
 
@@ -75,9 +72,7 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
         <CardHeader>
           <CardTitle className="text-2xl">Solicitar {serviceTitle}</CardTitle>
-          <CardDescription>
-            Déjanos tu información y una breve descripción. Te respondemos en menos de 24 horas.
-          </CardDescription>
+          <CardDescription>Déjanos tu información y una breve descripción.</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -97,7 +92,7 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
                 <AlertTriangle className="w-5 h-5 text-destructive mt-0.5" />
                 <div>
                   <p className="font-semibold">No pudimos enviar el mensaje.</p>
-                  <p className="text-sm text-muted-foreground">{errorMsg || "Intenta de nuevo en unos segundos."}</p>
+                  <p className="text-sm text-muted-foreground">{errorMsg}</p>
                 </div>
               </div>
             )}
@@ -147,7 +142,7 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
                 id="message"
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                placeholder="Cuéntanos qué necesitas, objetivos, tiempos y presupuesto aproximado..."
+                placeholder="Cuéntanos objetivos, tiempos y presupuesto aproximado..."
                 required
                 className="min-h-[140px] bg-background/50"
               />
@@ -162,14 +157,11 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
               <Send className="w-4 h-4 mr-2" />
               {status === "sending" ? "Enviando..." : "Enviar Solicitud"}
             </Button>
-
-            <p className="text-xs text-muted-foreground text-center">
-              Servicio seleccionado: <span className="font-medium">{serviceTitle}</span>
-            </p>
           </form>
         </CardContent>
       </Card>
     </section>
   )
 }
+
 
