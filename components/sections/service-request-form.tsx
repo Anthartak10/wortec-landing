@@ -18,6 +18,7 @@ type Props = {
 
 export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [errorMsg, setErrorMsg] = useState<string>("")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,36 +26,47 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
     message: "",
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus("sending")
+    setErrorMsg("")
 
     try {
-      // ✅ ESTE ES EL PAYLOAD (lo que se envía a Formspree)
       const payload = new FormData()
       payload.append("name", formData.name)
       payload.append("email", formData.email)
       payload.append("phone", formData.phone)
       payload.append("message", formData.message)
 
-      // ✅ Campos extra para que en el correo venga claro el servicio
       payload.append("service", serviceTitle)
       payload.append("serviceSlug", serviceSlug)
-      payload.append("page", typeof window !== "undefined" ? window.location.href : "")
+      payload.append("page", window.location.href)
       payload.append("source", "Service Page Wortec")
 
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
         body: payload,
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+        },
       })
 
-      if (!res.ok) throw new Error("Formspree submit failed")
+      // Intentar leer json para errores legibles
+      const data = await res.json().catch(() => null)
+
+      if (!res.ok) {
+        const msg =
+          data?.error ||
+          (Array.isArray(data?.errors) && data.errors[0]?.message) ||
+          "No se pudo enviar. Verifica el dominio permitido en Formspree y vuelve a intentar."
+        throw new Error(msg)
+      }
 
       setStatus("success")
       setFormData({ name: "", email: "", phone: "", message: "" })
-    } catch {
+    } catch (err: any) {
       setStatus("error")
+      setErrorMsg(err?.message || "No se pudo enviar el formulario.")
     }
   }
 
@@ -85,7 +97,7 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
                 <AlertTriangle className="w-5 h-5 text-destructive mt-0.5" />
                 <div>
                   <p className="font-semibold">No pudimos enviar el mensaje.</p>
-                  <p className="text-sm text-muted-foreground">Intenta de nuevo en unos segundos.</p>
+                  <p className="text-sm text-muted-foreground">{errorMsg || "Intenta de nuevo en unos segundos."}</p>
                 </div>
               </div>
             )}
@@ -160,3 +172,4 @@ export function ServiceRequestForm({ serviceTitle, serviceSlug }: Props) {
     </section>
   )
 }
+
