@@ -16,7 +16,7 @@ export function HeroSection() {
       {/* Fondo grid (si lo usas) */}
       <div className="absolute inset-0 tech-grid opacity-50" />
 
-      {/* Orbs (animación nube) */}
+      {/* Orbs (animación nube esto es una prueba) */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
         w-[34rem] h-[34rem] rounded-full blur-[130px]
