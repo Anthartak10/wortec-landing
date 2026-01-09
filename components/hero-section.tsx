@@ -30,7 +30,7 @@ const particles = Array.from({ length: 22 }).map((_, i) => ({
 export function HeroSection() {
   const whatsapp =
     process.env.NEXT_PUBLIC_WHATSAPP_URL ||
-    "https://wa.me/50600000000?text=Hola%20Wortec%2C%20quiero%20una%20consulta%20gratis."
+    "https://wa.me/50672827315?text=Hola%20Wortec%2C%20quiero%20una%20consulta%20gratis."
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -290,7 +290,7 @@ export function HeroSection() {
             </div>
 
 <p className="text-xs italic text-muted-foreground/80">
-  La unica forma de predecir el futuro, es CREARLO...
+  La unica forma de predecir el futuro, es CREA...
 </p>
 
 
