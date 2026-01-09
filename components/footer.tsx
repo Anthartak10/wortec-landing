@@ -1,146 +1,70 @@
-import Image from "next/image"
 import Link from "next/link"
-import { Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react"
-import { SocialLinks } from "@/components/social-links"
+import Image from "next/image"
+import { Great_Vibes } from "next/font/google"
+import { Instagram, Facebook } from "lucide-react"
 
-<SocialLinks />
+const greatVibes = Great_Vibes({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+})
 
-export function Footer() {
-  const currentYear = new Date().getFullYear()
+// ✅ Cambia estos links por los tuyos reales
+const SOCIAL = {
+  instagram: "https://www.instagram.com/wortec_solutions?igsh=cXF1azdqZ2E4OTNw",
+  facebook: "https://www.facebook.com/share/1GpjzEmGVA/",
+} as const
 
+export default function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-card/30 backdrop-blur-sm">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Image src="/images/whatsapp-20image-202025-05-08-20at-2011.png" alt="WORTEC" width={40} height={40} />
-              <span className="text-xl font-bold gradient-text">WORTEC</span>
+    <footer className="relative border-t border-border/50 bg-background/30 backdrop-blur">
+      <div className="container mx-auto px-4 py-10">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="font-bold text-lg flex items-center gap-3">
+              <Image
+                src="/wortec-logo.png"
+                alt="Wortec Logo"
+                width={28}
+                height={28}
+                className="rounded-sm"
+              />
+              <span>
+                WORTEC <span className="gradient-text">Solutions</span>
+              </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Transformando ideas en soluciones tecnológicas innovadoras. Tu socio de confianza en el mundo digital.
-            </p>
-          </div>
 
-          {/* Services */}
-          <div>
-            <h3 className="font-semibold mb-4">Servicios</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="#servicios" className="hover:text-foreground transition-colors">
-                  Desarrollo Web
-                </Link>
-              </li>
-              <li>
-                <Link href="#servicios" className="hover:text-foreground transition-colors">
-                  Apps Móviles
-                </Link>
-              </li>
-              <li>
-                <Link href="#servicios" className="hover:text-foreground transition-colors">
-                  Ciberseguridad
-                </Link>
-              </li>
-              <li>
-                <Link href="#servicios" className="hover:text-foreground transition-colors">
-                  Consultoría TI
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h3 className="font-semibold mb-4">Empresa</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="#contacto" className="hover:text-foreground transition-colors">
-                  Sobre Nosotros
-                </Link>
-              </li>
-              <li>
-                <Link href="#paquetes" className="hover:text-foreground transition-colors">
-                  Paquetes
-                </Link>
-              </li>
-              <li>
-                <Link href="#contacto" className="hover:text-foreground transition-colors">
-                  Contacto
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-foreground transition-colors">
-                  Blog
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social */}
-          <div>
-            <h3 className="font-semibold mb-4">Síguenos</h3>
-            <div className="flex gap-3">
+           
+          
+            {/* Social */}
+            <div className="flex items-center gap-2">
               <a
-                href="https://facebook.com"
+                href={SOCIAL.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border/50 flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-all"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border/50 flex items-center justify-center hover:border-accent/50 hover:bg-accent/10 transition-all"
+                aria-label="Instagram"
+                className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="https://linkedin.com"
+                href={SOCIAL.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border/50 flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-all"
+                aria-label="Facebook"
+                className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition"
               >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border/50 flex items-center justify-center hover:border-accent/50 hover:bg-accent/10 transition-all"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border/50 flex items-center justify-center hover:border-orange/50 hover:bg-orange/10 transition-all"
-              >
-                <Youtube className="w-5 h-5" />
+                <Facebook className="w-5 h-5" />
               </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="pt-8 border-t border-border/50 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {currentYear} WORTEC. Todos los derechos reservados.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Privacidad
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Términos
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Cookies
-            </Link>
-          </div>
+        <div className="mt-8 text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Wortec Solutions. Todos los derechos reservados.
         </div>
       </div>
     </footer>
   )
 }
+
