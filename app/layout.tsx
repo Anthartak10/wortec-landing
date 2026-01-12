@@ -5,10 +5,18 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { WhatsAppFloat } from "@/components/whatsapp-float"
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.wortecsolutionscr.com"
+
 export const metadata: Metadata = {
-  title: "Wortec Solutions",
-  description: "Soluciones tecnológicas integrales para impulsar tu negocio.",
+  metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png" }],
+  },
 }
+
+
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
